@@ -45,11 +45,11 @@ resource "aviatrix_aws_tgw_vpc_attachment" "prd_spoke1_tgw_attachment" {
   }
 }
 
-# ss-transit TGW - spoke 2 attachment
+# prd-transit TGW - spoke 2 attachment
 resource "aviatrix_aws_tgw_vpc_attachment" "prd_spoke2_tgw_attachment" {
   tgw_name             = aviatrix_aws_tgw.prd_tgw.tgw_name
   region               = var.aws_region
-  security_domain_name = "Default_Domain"
+  security_domain_name = "Shared_Service_Domain"
   vpc_account_name     = var.aws_account
   vpc_id               = module.prd_spoke2_vpc.vpc_id
   depends_on = [aviatrix_aws_tgw_security_domain.prd_default_domains]

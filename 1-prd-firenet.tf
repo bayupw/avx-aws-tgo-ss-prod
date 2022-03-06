@@ -22,7 +22,7 @@ resource "aviatrix_transit_gateway" "prd_fw_gw" {
   vpc_reg      = var.aws_region
   gw_size      = "c5.xlarge"
   subnet       = aviatrix_vpc.prd_firenet_vpc.public_subnets[0].cidr
-  #ha_subnet                = aviatrix_vpc.dev_transit_vpc.public_subnets[1].cidr
+  #ha_subnet                = aviatrix_vpc.prd_transit_vpc.public_subnets[1].cidr
   #ha_gw_size               = "t2.micro"
   enable_hybrid_connection = true
   connected_transit        = true
@@ -34,7 +34,7 @@ resource "aviatrix_transit_gateway" "prd_fw_gw" {
     Organization = "Production"
   }
 
-  depends_on           = [aviatrix_transit_gateway.prd_fw_gw, aviatrix_aws_tgw_security_domain_connection.prd_connections, aviatrix_aws_tgw_transit_gateway_attachment.prd_tgw_to_dev_gw_attachment]
+  depends_on           = [aviatrix_transit_gateway.prd_fw_gw, aviatrix_aws_tgw_security_domain_connection.prd_connections, aviatrix_aws_tgw_transit_gateway_attachment.prd_tgw_to_prd_gw_attachment]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ resource "aviatrix_firewall_instance_association" "prd_ew_fw_instance_assoc" {
   instance_id     = aviatrix_firewall_instance.prd_ew_fw_instance.instance_id
   firewall_name   = aviatrix_firewall_instance.prd_ew_fw_instance.firewall_name
   lan_interface   = aviatrix_firewall_instance.prd_ew_fw_instance.lan_interface
-  #management_interface = aviatrix_firewall_instance.dev_ew_fw_instance.management_interface
+  #management_interface = aviatrix_firewall_instance.prd_ew_fw_instance.management_interface
   egress_interface = aviatrix_firewall_instance.prd_ew_fw_instance.egress_interface
   attached         = true
 }

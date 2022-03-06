@@ -30,7 +30,7 @@ resource "aviatrix_transit_gateway" "ss_gw" {
   local_as_number               = "65520"
   enable_active_mesh            = true
   enable_learned_cidrs_approval = true
-  approved_learned_cidrs = [cidrsubnet(var.vpc_cidr.on_prem_vpc, 1, 0),cidrsubnet(var.vpc_cidr.on_prem_vpc, 1, 1)]
+  #approved_learned_cidrs = [cidrsubnet(var.vpc_cidr.on_prem_vpc, 1, 0),cidrsubnet(var.vpc_cidr.on_prem_vpc, 1, 1)]
 
   tags = {
     Organization = "Shared-Services"

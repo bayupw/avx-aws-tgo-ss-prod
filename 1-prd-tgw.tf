@@ -32,7 +32,15 @@ resource "aviatrix_transit_gateway" "prd_gw" {
   tags = {
     Organization = "Production"
   }
+
 }
+
+
+
+
+
+
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Aviatrix Managed AWS TGW | prd-tgw

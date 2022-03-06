@@ -23,12 +23,12 @@ terraform {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "tls_private_key" "ss_key" {
-  count = var.key_name == null ? 1 : 0
+  count     = var.key_name == null ? 1 : 0
   algorithm = "RSA"
 }
 
 resource "local_file" "private_key" {
-  count = var.key_name == null ? 1 : 0  
+  count           = var.key_name == null ? 1 : 0
   content         = tls_private_key.ss_key[0].private_key_pem
   filename        = "ss-key.pem"
   file_permission = "0600"

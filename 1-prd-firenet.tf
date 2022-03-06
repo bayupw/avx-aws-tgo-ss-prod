@@ -40,7 +40,8 @@ resource "aviatrix_transit_gateway" "prd_fw_gw" {
 # ---------------------------------------------------------------------------------------------------------------------
 # Aviatrix Transit Firenet Gateway | prd-fw-gw
 # ---------------------------------------------------------------------------------------------------------------------
-resource "aviatrix_aws_tgw_vpc_attachment" "firenet_tgw_attachment" {
+resource "aviatrix_aws_tgw_vpc_attachment" "prd_firenet_tgw_attachment" {
+  #resource "aviatrix_aws_tgw_vpc_attachment" "prd_firenet_tgw_attachment" {
   tgw_name             = aviatrix_aws_tgw.prd_tgw.tgw_name
   region               = var.aws_region
   security_domain_name = aviatrix_aws_tgw_security_domain.prd_firewall_domain.name

@@ -55,6 +55,7 @@ resource "aviatrix_aws_tgw" "ss_tgw" {
   tgw_name                          = "ss-tgw"
 }
 
+# Create Security Domains based on var.tgw_domains
 resource "aviatrix_aws_tgw_security_domain" "ss_default_domains" {
   for_each   = toset(var.tgw_domains)
   name       = each.value
@@ -62,12 +63,20 @@ resource "aviatrix_aws_tgw_security_domain" "ss_default_domains" {
   depends_on = [aviatrix_aws_tgw.ss_tgw]
 }
 
-resource "aviatrix_aws_tgw_security_domain_connection" "ss_default_connections" {
-  for_each     = local.connections_map
+# Create Firewall Security Domain
+resource "aviatrix_aws_tgw_security_domain" "ss_firewall_domain" {
+  name              = "Firewall"
+  tgw_name          = aviatrix_aws_tgw.ss_tgw.tgw_name
+  aviatrix_firewall = true
+  depends_on        = [aviatrix_aws_tgw_security_domain.ss_default_domains]
+}
+
+resource "aviatrix_aws_tgw_security_domain_connection" "ss_connections" {
+  for_each     = local.fw_connections_map
   tgw_name     = aviatrix_aws_tgw.ss_tgw.tgw_name
   domain_name1 = each.value.domain1
   domain_name2 = each.value.domain2
-  depends_on   = [aviatrix_aws_tgw_security_domain.ss_default_domains]
+  depends_on   = [aviatrix_aws_tgw_security_domain.ss_default_domains, aviatrix_aws_tgw_security_domain.ss_firewall_domain]
 }
 
 # ss-tgw to ss-gw attachment
@@ -78,5 +87,5 @@ resource "aviatrix_aws_tgw_transit_gateway_attachment" "ss_tgw_to_ss_gw_attachme
   vpc_id               = aviatrix_vpc.ss_transit_vpc.vpc_id
   transit_gateway_name = aviatrix_transit_gateway.ss_gw.gw_name
 
-  depends_on = [aviatrix_transit_gateway.ss_gw, aviatrix_aws_tgw.ss_tgw, aviatrix_aws_tgw_security_domain_connection.ss_default_connections]
+  depends_on = [aviatrix_transit_gateway.ss_gw, aviatrix_aws_tgw.ss_tgw, aviatrix_aws_tgw_security_domain_connection.ss_connections]
 }

@@ -35,6 +35,11 @@ resource "aviatrix_transit_gateway" "ss_gw" {
   tags = {
     Organization = "Shared-Services"
   }
+
+  # ignore changes to allow migration
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

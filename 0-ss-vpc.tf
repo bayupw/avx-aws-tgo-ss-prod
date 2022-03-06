@@ -37,7 +37,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "ss_spoke1_tgw_attachment" {
   security_domain_name = "Default_Domain"
   vpc_account_name     = var.aws_account
   vpc_id               = module.ss_spoke1_vpc.vpc_id
-  depends_on = [aviatrix_aws_tgw_security_domain.ss_default_domains]
+  depends_on           = [aviatrix_aws_tgw_security_domain.ss_default_domains]
 
   # ignore changes to allow migration
   lifecycle {
@@ -52,7 +52,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "ss_spoke2_tgw_attachment" {
   security_domain_name = "Default_Domain"
   vpc_account_name     = var.aws_account
   vpc_id               = module.ss_spoke2_vpc.vpc_id
-  depends_on = [aviatrix_aws_tgw_security_domain.ss_default_domains]
+  depends_on           = [aviatrix_aws_tgw_security_domain.ss_default_domains]
 
   # ignore changes to allow migration
   lifecycle {

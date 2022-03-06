@@ -11,5 +11,5 @@ module "onprem" {
   csr_bgp_as_num = "65501"
   create_client  = true
   key_name       = var.key_name
-  depends_on = [aviatrix_transit_gateway.ss_gw, aviatrix_vpc.ss_transit_vpc]
+  depends_on     = [aviatrix_transit_gateway.ss_gw, aviatrix_vpc.ss_transit_vpc]
 }

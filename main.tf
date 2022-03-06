@@ -34,7 +34,7 @@ resource "local_file" "private_key" {
 
 resource "aws_key_pair" "instance_key_pair" {
   count      = var.key_name == null ? 1 : 0
-  key_name   = "ss-non-prod-key"
+  key_name   = "ss-key"
   public_key = tls_private_key.ss_key.public_key_openssh
 
   lifecycle {

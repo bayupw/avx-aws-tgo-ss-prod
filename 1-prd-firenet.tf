@@ -34,7 +34,7 @@ resource "aviatrix_transit_gateway" "prd_fw_gw" {
     Organization = "Production"
   }
 
-  depends_on = [aviatrix_vpc.prd_firenet_vpc]
+  depends_on           = [aviatrix_transit_gateway.prd_fw_gw, aviatrix_aws_tgw_security_domain_connection.prd_connections, aviatrix_aws_tgw_transit_gateway_attachment.prd_tgw_to_dev_gw_attachment]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

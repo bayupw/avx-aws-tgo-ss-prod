@@ -12,7 +12,7 @@ variable "vpc_cidr" {
     dev_transit_vpc   = "172.19.178.0/23"
 
     prd_firenet_vpc = "172.19.46.0/23"
-    ss_firenet_vpc = "172.19.144.0/23"
+    ss_firenet_vpc  = "172.19.144.0/23"
 
     prd_spoke1_vpc = "172.19.0.0/23"
     prd_spoke2_vpc = "172.19.2.0/23"

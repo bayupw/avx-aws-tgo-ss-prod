@@ -12,7 +12,7 @@ resource "aws_security_group" "prd_spoke1_instance_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = local.ingress_cidr_blocks
   }
   egress {
     from_port   = 0
@@ -54,7 +54,7 @@ resource "aws_security_group" "prd_spoke2_instance_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = local.ingress_cidr_blocks
   }
   egress {
     from_port   = 0

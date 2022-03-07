@@ -13,6 +13,7 @@ variable "vpc_cidr" {
 
     prd_firenet_vpc = "172.19.46.0/23"
     ss_firenet_vpc  = "172.19.144.0/23"
+    dev_firenet_vpc = "172.19.180.0/23"
 
     prd_spoke1_vpc = "172.19.0.0/23"
     prd_spoke2_vpc = "172.19.2.0/23"
@@ -80,6 +81,18 @@ variable "key_name" {
   description = "Existing SSH public key name"
 }
 
+variable "fw_admin_password" {
+  type        = string
+  default     = "Aviatrix123#"
+  description = "Firewall admin password"
+}
+
+variable "ingress_ip" {
+  type        = string
+  default     = "0.0.0.0/0"
+  description = "Ingress CIDR block for EC2 Security Group"
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # TGW
 # ---------------------------------------------------------------------------------------------------------------------
@@ -94,6 +107,10 @@ variable "tgw_domains" {
 }
 
 locals {
+
+  rfc1918             = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+  ingress_cidr_blocks = concat(local.rfc1918, [var.ingress_ip])
+
   #Create connections based on var.tgw_domains
   connections = flatten([
     for domain in var.tgw_domains : [
@@ -126,19 +143,40 @@ locals {
     for connection in local.fw_connections : "${connection.domain1}:${connection.domain2}" => connection
   }
 
-  # Fortigate boostrap config
-  init_conf = <<EOF
+  # Shared Services Fortigate Firewall bootstrap config
+  ss_fw_init_conf = <<EOF
 config system admin
     edit admin
-        set password Aviatrix123#
+        set password ${var.fw_admin_password}
 end
 config system global
     set hostname fg
     set timezone 04
 end
+config system interface
+    edit port2
+    set allowaccess ping https
+end
+config router static
+    edit 1
+        set dst 10.0.0.0 255.0.0.0
+        set gateway ${cidrhost(aviatrix_transit_gateway.ss_fw_gw.lan_interface_cidr, 1)}
+        set device port2
+    next
+    edit 2
+        set dst 172.16.0.0 255.240.0.0
+        set gateway ${cidrhost(aviatrix_transit_gateway.ss_fw_gw.lan_interface_cidr, 1)}
+        set device port2
+    next
+    edit 3
+        set dst 192.168.0.0 255.255.0.0
+        set gateway ${cidrhost(aviatrix_transit_gateway.ss_fw_gw.lan_interface_cidr, 1)}
+        set device port2
+    next
+end
 config firewall policy
     edit 1
-        set name allow_all
+        set name allow-all-LAN-to-LAN
         set srcintf port2
         set dstintf port2
         set srcaddr all
@@ -146,6 +184,55 @@ config firewall policy
         set action accept
         set schedule always
         set service ALL
+        set logtraffic all
+        set logtraffic-start enable
+    next
+end
+EOF
+
+  # Production Fortigate Firewall bootstrap config
+  prd_fw_init_conf = <<EOF
+config system admin
+    edit admin
+        set password ${var.fw_admin_password}
+end
+config system global
+    set hostname fg
+    set timezone 04
+end
+config system interface
+    edit port2
+    set allowaccess ping https
+end
+config router static
+    edit 1
+        set dst 10.0.0.0 255.0.0.0
+        set gateway ${cidrhost(aviatrix_transit_gateway.prd_fw_gw.lan_interface_cidr, 1)}
+        set device port2
+    next
+    edit 2
+        set dst 172.16.0.0 255.240.0.0
+        set gateway ${cidrhost(aviatrix_transit_gateway.prd_fw_gw.lan_interface_cidr, 1)}
+        set device port2
+    next
+    edit 3
+        set dst 192.168.0.0 255.255.0.0
+        set gateway ${cidrhost(aviatrix_transit_gateway.prd_fw_gw.lan_interface_cidr, 1)}
+        set device port2
+    next
+end
+config firewall policy
+    edit 1
+        set name allow-all-LAN-to-LAN
+        set srcintf port2
+        set dstintf port2
+        set srcaddr all
+        set dstaddr all
+        set action accept
+        set schedule always
+        set service ALL
+        set logtraffic all
+        set logtraffic-start enable
     next
 end
 EOF

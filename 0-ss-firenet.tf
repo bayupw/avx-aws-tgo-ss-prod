@@ -52,7 +52,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "ss_firenet_tgw_attachment" {
 # ---------------------------------------------------------------------------------------------------------------------
 # Launch Firewall
 # ---------------------------------------------------------------------------------------------------------------------
-/* resource "aviatrix_firewall_instance" "ss_ew_fw_instance" {
+resource "aviatrix_firewall_instance" "ss_ew_fw_instance" {
   vpc_id          = aviatrix_vpc.ss_firenet_vpc.vpc_id
   firenet_gw_name = aviatrix_transit_gateway.ss_fw_gw.gw_name
   firewall_name   = "ss-ew-fg-instance-1"
@@ -61,7 +61,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "ss_firenet_tgw_attachment" {
   egress_subnet   = aviatrix_vpc.ss_firenet_vpc.subnets[1].cidr
   #iam_role              = module.fortigate_bootstrap.aws_iam_role.name
   #bootstrap_bucket_name = module.fortigate_bootstrap.aws_s3_bucket.bucket
-  user_data  = local.init_conf
+  user_data  = local.ss_fw_init_conf
   depends_on = [aviatrix_transit_gateway.ss_fw_gw]
 }
 
@@ -85,4 +85,4 @@ resource "aviatrix_firenet" "ss_firenet" {
   keep_alive_via_lan_interface_enabled = false
   manage_firewall_instance_association = false
   depends_on                           = [aviatrix_firewall_instance_association.ss_ew_fw_instance_assoc]
-} */
+}

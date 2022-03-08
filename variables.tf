@@ -5,30 +5,14 @@
 variable "vpc_cidr" {
   type = map(string)
   default = {
-    prd_transit_vpc   = "172.19.44.0/23"
-    ss_transit_vpc    = "172.19.142.0/23"
-    stass_transit_vpc = "172.19.174.0/23"
-    sta_transit_vpc   = "172.19.176.0/23"
-    dev_transit_vpc   = "172.19.178.0/23"
+    prd_transit_vpc    = "172.19.44.0/23"
+    prd_int_fw_vpc     = "172.19.40.0/23"
+    prd_banking_vpc    = "172.19.0.0/19"
+    prd_it_service_vpc = "172.19.38.0/23"
 
-    prd_firenet_vpc = "172.19.46.0/23"
-    ss_firenet_vpc  = "172.19.144.0/23"
-    dev_firenet_vpc = "172.19.180.0/23"
-
-    prd_spoke1_vpc = "172.19.0.0/23"
-    prd_spoke2_vpc = "172.19.2.0/23"
-
-    ss_spoke1_vpc = "172.18.0.0/23"
-    ss_spoke2_vpc = "172.18.2.0/23"
-
-    stass_spoke1_vpc = "172.18.4.0/23"
-    stass_spoke2_vpc = "172.18.6.0/23"
-
-    sta_spoke1_vpc = "172.18.8.0/23"
-    sta_spoke2_vpc = "172.18.10.0/23"
-
-    dev_spoke1_vpc = "172.18.12.0/23"
-    dev_spoke2_vpc = "172.18.14.0/23"
+    ss_transit_vpc = "172.19.142.0/23"
+    ss_int_fw_vpc  = "172.18.138.0/23"
+    ss_vdi_vpc     = "172.18.136.0/23"
 
     on_prem_vpc = "192.168.0.0/23"
   }
@@ -99,15 +83,10 @@ variable "ingress_ip" {
 
 variable "tgw_domains" {
   description = "Default Domain Name"
-  default = [
-    "Default_Domain",
-    "Shared_Service_Domain",
-    "Aviatrix_Edge_Domain"
-  ]
+  default     = ["Default_Domain", "Shared_Service_Domain", "Aviatrix_Edge_Domain"]
 }
 
 locals {
-
   rfc1918             = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
   ingress_cidr_blocks = concat(local.rfc1918, [var.ingress_ip])
 
@@ -207,17 +186,17 @@ end
 config router static
     edit 1
         set dst 10.0.0.0 255.0.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.prd_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.prd_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
     edit 2
         set dst 172.16.0.0 255.240.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.prd_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.prd_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
     edit 3
         set dst 192.168.0.0 255.255.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.prd_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.prd_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
 end

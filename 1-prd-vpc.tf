@@ -51,7 +51,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "prd_it_service_tgw_attachment" {
   region               = var.aws_region
   security_domain_name = "Shared_Service_Domain"
   vpc_account_name     = var.aws_account
-  vpc_id               = module.prd_it_service.vpc_id
+  vpc_id               = module.prd_it_service_vpc.vpc_id
   depends_on           = [aviatrix_aws_tgw_security_domain.prd_default_domains]
 
   # ignore changes to allow migration

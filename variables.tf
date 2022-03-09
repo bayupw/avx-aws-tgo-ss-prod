@@ -139,17 +139,17 @@ end
 config router static
     edit 1
         set dst 10.0.0.0 255.0.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.ss_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.ss_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
     edit 2
         set dst 172.16.0.0 255.240.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.ss_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.ss_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
     edit 3
         set dst 192.168.0.0 255.255.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.ss_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.ss_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
 end

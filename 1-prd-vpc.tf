@@ -17,16 +17,16 @@ module "prd_banking_vpc" {
 }
 
 # prd it service vpc
-module "prd_it_service" {
+module "prd_it_service_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
   name = "prd-it-service"
-  cidr = var.vpc_cidr.prd_it_service
+  cidr = var.vpc_cidr.prd_it_service_vpc
 
   azs             = ["${var.aws_region}a"]
-  private_subnets = [cidrsubnet(var.vpc_cidr.prd_it_service, 1, 1)]
-  public_subnets  = [cidrsubnet(var.vpc_cidr.prd_it_service, 1, 0)]
+  private_subnets = [cidrsubnet(var.vpc_cidr.prd_it_service_vpc, 1, 1)]
+  public_subnets  = [cidrsubnet(var.vpc_cidr.prd_it_service_vpc, 1, 0)]
   enable_ipv6     = false
 }
 

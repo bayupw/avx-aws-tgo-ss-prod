@@ -72,7 +72,7 @@ resource "aviatrix_aws_tgw_security_domain" "ss_firewall_domain" {
 }
 
 resource "aviatrix_aws_tgw_security_domain_connection" "ss_connections" {
-  for_each     = local.fw_connections_map
+  for_each     = local.connections_map
   tgw_name     = aviatrix_aws_tgw.ss_tgw.tgw_name
   domain_name1 = each.value.domain1
   domain_name2 = each.value.domain2
